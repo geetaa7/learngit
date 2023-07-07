@@ -1,0 +1,16 @@
+image: chudamanisanju/gitlab-runner:v1
+
+before_script: 
+  - "mkdir -p ~/.ssh"
+  - "chmod 700 ~/.ssh"
+  - "[[ -f /.dockerenv ]] && echo -e \"Host *\\n\\tStrictHostKeyChecking no\\n\\n\" > ~/.ssh/config"
+  - "git config --global user.email \"chudamani.sanju@gmail.com\""
+  - "git config --global user.name \"Chudamani Sanju\""
+image: "chudamanisanju/gitlab-runner:v1"
+update_main: 
+  only: 
+    - main
+  script: 
+    - "export SSHPASS=$DEV_SERVER_PASS"
+    - "sshpass -p \"$DEV_SERVER_PASS\" ssh ubuntu@\"$DEV_SERVER_IP\" 'cd /var/www/html/project1; ls -la; git pull'"
+  when: manual
